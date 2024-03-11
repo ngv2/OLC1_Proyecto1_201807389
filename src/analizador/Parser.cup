@@ -2,7 +2,7 @@
 package analizador;
 
 import java_cup.runtime.*;
-
+import java.util.LinkedList;
 
 //------> Codigo para el parser
 //------> Declaracion de variables, funciones y funciones de error
@@ -13,7 +13,7 @@ parser code
 
     public void syntax_error(Symbol s)
     {
-            System.err.println("Error Sintactico: "+ s.value + " - Fila: " + s.right + " - Columna: " + s.left + ". Recuperado" );
+            System.err.println("Error Sintactico: no se espera "+ s.value + " - Fila: " + s.right + " - Columna: " + s.left + ". Recuperado" );
     }
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
@@ -30,12 +30,22 @@ action code
 
 
 //------> Declaración de terminales
-terminal String ENTERO;
-
+terminal String  PARDER, PARIZQ, PYC;
+terminal String ENTERO, CADENA, ID, DECIMAL;
+terminal String COMA, IGUAL;
+terminal String VAR, DOUBLEVAR, DOSP, MENORQ, END, GUION, PROGRAM, ENDPROGRAM, MAYORQ; 
+terminal String MAS, CHARVAR, CORIZQ, CORDER, ARR, IDARR;
+terminal String SUMA, RESTA, MULTI, DIV, MOD;
+terminal String MEDIA, MEDIANA, MODA, VARIANZA, MAX, MIN, PRINT, CONSOLE, COLUMN;
 
 //------> Declaración de no terminales
 non terminal inicio;
+non terminal listainstr,  listaValoresDouble, listaValoresChar;
+non terminal instruccion, expresionDouble, expresionChar, operaciones, funciones;
+non terminal printN, variable, valor, imp;
 
+//------> PRECEDENCIA
+precedence left MAS;
 
 //------> Definir Simbolo Inicial
 start with inicio; 
@@ -43,5 +53,245 @@ start with inicio;
 
 // ------------>  Producciones  <------------
 
-inicio ::= ENTERO
+inicio ::= PROGRAM listainstr ENDPROGRAM
 ;
+
+listainstr ::= listainstr instruccion
+    | instruccion
+;
+
+instruccion ::= printN
+    | variable
+    |funciones
+    | error PYC
+;
+
+
+//Para imprimer en consola
+
+printN ::= CONSOLE DOSP DOSP PRINT IGUAL imp:val  END PYC    {: Util.Instruction.Print(val); :} 
+          |CONSOLE DOSP DOSP COLUMN IGUAL expresionChar:var GUION MAYORQ expresionDouble:val  END PYC    {: Util.Instruction.PrintArr(val, var.toString()); :}
+          //|CONSOLE DOSP DOSP COLUMN IGUAL expresionChar:var GUION MAYORQ CORIZQ listaGeneral:val CORDER END PYC    {: Util.Instruction.PrintArr(val, var.toString()); :}
+         
+; 
+
+//Asignaciones de variales
+variable ::= VAR DOSP DOUBLEVAR DOSP DOSP  ID:var MENORQ GUION expresionDouble:val END PYC     
+    {:Util.Instruction.tablaVariables.put(var.toString(), val.toString());  :}
+    | VAR DOSP CHARVAR CORIZQ CORDER DOSP DOSP ID:var MENORQ GUION expresionChar:val END PYC
+      {:Util.Instruction.tablaVariables.put(var.toString(), val.toString()); :}
+    | ARR DOSP DOUBLEVAR DOSP DOSP IDARR:var MENORQ GUION CORIZQ listaValoresDouble:val CORDER END PYC
+      {:Util.Instruction.tablaVariables.put(var.toString(), (LinkedList<Double>)  val); Util.Instruction.mostrarTablaVariables();:}
+    | ARR DOSP DOUBLEVAR DOSP DOSP IDARR:var MENORQ GUION  expresionDouble:val END PYC
+      {:Util.Instruction.tablaVariables.put(var.toString(), (LinkedList<Double>)  val); Util.Instruction.mostrarTablaVariables();:}
+    | ARR DOSP CHARVAR CORIZQ CORDER DOSP DOSP IDARR:var MENORQ GUION CORIZQ listaValoresChar:val CORDER END PYC
+      {:Util.Instruction.tablaVariables.put(var.toString(), (LinkedList<String>) val); Util.Instruction.mostrarTablaVariables(); :}
+    | ARR DOSP CHARVAR CORIZQ CORDER DOSP DOSP IDARR:var MENORQ GUION  expresionChar:val  END PYC
+      {:Util.Instruction.tablaVariables.put(var.toString(), (LinkedList<String>) val); Util.Instruction.mostrarTablaVariables(); :}
+    | VAR DOSP DOUBLEVAR DOSP DOSP ID:var MENORQ GUION operaciones:val END PYC
+      {:Util.Instruction.tablaVariables.put(var.toString(), val.toString() ); Util.Instruction.mostrarTablaVariables(); :}
+    | VAR DOSP DOUBLEVAR DOSP DOSP ID:var MENORQ GUION funciones:val END PYC
+      {:Util.Instruction.tablaVariables.put(var.toString(), val.toString() ); Util.Instruction.mostrarTablaVariables(); :}
+;
+
+
+//funciones de estadistica
+
+funciones ::= MEDIA PARIZQ CORIZQ listaValoresDouble:val CORDER PARDER {: RESULT = Util.Estadistica.Media(val); :}
+            | MEDIANA PARIZQ CORIZQ listaValoresDouble:val CORDER PARDER {: RESULT = Util.Estadistica.Mediana(val); :}
+            | MODA PARIZQ CORIZQ listaValoresDouble:val CORDER PARDER {: RESULT = Util.Estadistica.Moda(val); :}
+            | VARIANZA PARIZQ CORIZQ listaValoresDouble:val CORDER PARDER {: RESULT = Util.Estadistica.Varianza(val); :}
+            | MAX PARIZQ CORIZQ listaValoresDouble:val CORDER PARDER {: RESULT = Util.Estadistica.Max(val); :}
+            | MIN PARIZQ CORIZQ listaValoresDouble:val CORDER PARDER {: RESULT = Util.Estadistica.Min(val); :}
+            |MEDIA PARIZQ  expresionDouble:val  PARDER {: RESULT = Util.Estadistica.Media(val); :}
+            | MEDIANA PARIZQ  expresionDouble:val  PARDER {: RESULT = Util.Estadistica.Mediana(val); :}
+            | MODA PARIZQ  expresionDouble:val  PARDER {: RESULT = Util.Estadistica.Moda(val); :}
+            | VARIANZA PARIZQ  expresionDouble:val  PARDER {: RESULT = Util.Estadistica.Varianza(val); :}
+            | MAX PARIZQ  expresionDouble:val  PARDER {: RESULT = Util.Estadistica.Max(val); :}
+            | MIN PARIZQ  expresionDouble:val  PARDER {: RESULT = Util.Estadistica.Min(val); :}
+;
+
+
+//Usado para el array de tipo double que admite operaciones y funciones
+listaValoresDouble ::=  expresionDouble:val COMA listaValoresDouble:resto
+               {:
+                   LinkedList<String> resultado = (LinkedList<String>) resto;
+                   resultado.addFirst(val.toString()); 
+                   RESULT = resultado;
+               :}
+    
+    | operaciones:val COMA listaValoresDouble:resto
+                {:
+                   LinkedList<String> resultado = (LinkedList<String>) resto;
+                   resultado.addFirst(val.toString()); 
+                   RESULT = resultado;
+               :}
+    | funciones:val COMA listaValoresDouble:resto
+                {:
+                   LinkedList<String> resultado = (LinkedList<String>) resto;
+                   resultado.addFirst(val.toString()); 
+                   RESULT = resultado;
+               :}
+
+    | expresionDouble:val
+               {:
+                   LinkedList<String> resultado = new LinkedList<String>();
+                   resultado.add(val.toString()); 
+                   RESULT = resultado;
+               :}
+    | operaciones:val                 {:
+                  LinkedList<String> resultado = new LinkedList<String>();
+                   resultado.add(val.toString()); 
+                   RESULT = resultado;
+               :}
+    | funciones:val
+                {:
+                  LinkedList<String> resultado = new LinkedList<String>();
+                   resultado.add(val.toString()); 
+                   RESULT = resultado;
+               :}
+;
+
+
+//Usado para las producciones de print
+
+
+//Usado para el array de tipo char
+
+listaValoresChar ::=   expresionChar:val COMA listaValoresChar:resto
+               {: 
+                   LinkedList<String> resultado = (LinkedList<String>) resto;
+                   resultado.addFirst(val.toString()); 
+                   RESULT = resultado;
+               :}
+    | expresionChar:val
+               {: 
+                   LinkedList<String> resultado = new LinkedList<String>();
+                   resultado.add(val.toString()); 
+                   RESULT = resultado;
+               :}
+;
+
+
+//No terminal de las expresiones utilizadas para la declaracion de variables de arryas de tipo double
+expresionDouble ::= ENTERO:val    {: RESULT = val.toString(); :}
+        | DECIMAL:val       {: RESULT = val.toString(); :}
+        | ID:val            {: RESULT = Util.Instruction.tablaVariables.get(val.toString()); :}
+        | IDARR:val            {: RESULT = Util.Instruction.tablaVariables.get(val); :}
+      
+        
+;
+
+
+//No terminal de las expresiones utilizadas para la declaracion de variables y arrays de tipo char
+expresionChar ::= CADENA:val        {: RESULT = val.toString(); :} 
+                | ID:val            {: RESULT = Util.Instruction.tablaVariables.get(val.toString()); :}
+                | IDARR:val            {: RESULT = Util.Instruction.tablaVariables.get(val.toString()); :}
+            
+;
+
+
+//tiene las operaciones aritmeticas completas scon las anidaciones que pueden haber 
+
+operaciones ::=SUMA PARIZQ operaciones:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Suma(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | RESTA PARIZQ operaciones:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Resta(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | MULTI PARIZQ operaciones:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Multiplicacion(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | DIV PARIZQ operaciones:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Division(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | MOD PARIZQ operaciones:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Modulo(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            |SUMA PARIZQ valor:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Suma(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | RESTA PARIZQ valor:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Resta(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | MULTI PARIZQ valor:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Multiplicacion(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | DIV PARIZQ valor:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Division(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | MOD PARIZQ valor:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Modulo(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            |SUMA PARIZQ operaciones:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Suma(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | RESTA PARIZQ operaciones:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Resta(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | MULTI PARIZQ operaciones:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Multiplicacion(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | DIV PARIZQ operaciones:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Division(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | MOD PARIZQ operaciones:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Modulo(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            |SUMA PARIZQ valor:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Suma(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | RESTA PARIZQ valor:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Resta(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | MULTI PARIZQ valor:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Multiplicacion(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | DIV PARIZQ valor:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Division(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | MOD PARIZQ valor:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Modulo(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+;
+
+
+//utilizado en las operaciones y funciones cuando solo se quieren datos simples sin anidar
+
+valor ::=ENTERO:val {: RESULT = val.toString(); :}
+        | ID: val {: RESULT = Util.Instruction.tablaVariables.get(val); :}
+        |funciones:val {: RESULT = val.toString(); :}
+       
+;
+
+//Para la impresion de los datos simples
+
+imp ::= ENTERO:val COMA  imp:resto
+                {:
+                   LinkedList<String> resultado = (LinkedList<String>) resto;
+                   resultado.addFirst(val.toString()); 
+                   RESULT = resultado;
+               :}
+        |CADENA:val COMA imp:resto
+                {:
+                   LinkedList<String> resultado = (LinkedList<String>) resto;
+                   resultado.addFirst(val.toString()); 
+                   RESULT = resultado;
+               :}
+        | ID:val COMA imp:resto
+                {:
+                   LinkedList<String> resultado = (LinkedList<String>) resto;
+                   resultado.addFirst((String)Util.Instruction.tablaVariables.get(val)); 
+                   RESULT = resultado;
+               :}
+
+        
+
+        |funciones:val COMA imp:resto
+               {:
+                   LinkedList<String> resultado = (LinkedList<String>) resto;
+                   resultado.addFirst(val.toString()); 
+                   RESULT = resultado;
+               :}
+        |operaciones:val COMA imp:resto
+               {:
+                   LinkedList<String> resultado = (LinkedList<String>) resto;
+                   resultado.addFirst(val.toString()); 
+                   RESULT = resultado;
+               :}
+
+        |ENTERO:val
+               {:
+                   LinkedList<String> resultado = new LinkedList<String>();
+                   resultado.add(val.toString()); 
+                   RESULT = resultado;
+               :}
+        |CADENA:val
+               {:
+                   LinkedList<String> resultado = new LinkedList<String>();
+                   resultado.add(val.toString()); 
+                   RESULT = resultado;
+               :}
+        | ID:val
+               {:
+                   LinkedList<String> resultado = new LinkedList<String>();
+                   resultado.add((String)Util.Instruction.tablaVariables.get(val)); 
+                   RESULT = resultado;
+               :}
+        |funciones:val
+               {:
+                   LinkedList<String> resultado = new LinkedList<String>();
+                   resultado.add(val.toString()); 
+                   RESULT = resultado;
+               :}
+        |operaciones:val 
+               {:
+                   LinkedList<String> resultado = new LinkedList<String>();
+                   resultado.add(val.toString()); 
+                   RESULT = resultado;
+               :}
+;
+
+
+               
+
