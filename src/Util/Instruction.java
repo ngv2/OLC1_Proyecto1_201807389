@@ -9,16 +9,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-
 /**
  *
  * @author lets
  */
-
 public class Instruction {
     public static HashMap<String, Object> tablaVariables = new HashMap<>();
     public static LinkedList<Object> listaPrint = new LinkedList<Object>();

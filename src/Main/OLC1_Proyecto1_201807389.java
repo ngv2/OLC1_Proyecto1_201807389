@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
+
 package Main;
 
 import Vistas.Inicio;
@@ -15,7 +12,12 @@ import java.util.List;
  * @author lets
  */
 public class OLC1_Proyecto1_201807389 {
-               
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+                             
       
         
          /*
@@ -67,16 +69,6 @@ public class OLC1_Proyecto1_201807389 {
 
         
          
-         /*
-         LinkedList<String> result = new LinkedList<String>(); 
-          result.add("hola");
-          result.add("3");
-          
-          Object tipo1 = result;
-            for (String elemento  : (LinkedList<String>)tipo1 ) {
-                System.out.println(elemento);
-            }
-          */
     }
     
     
