@@ -6,7 +6,7 @@ package Components;
 
 import javax.swing.JTextArea;
 
-public class ConsolaManager {
+public class Consola {
     private static JTextArea consola;
 
     public static void setConsola(JTextArea consolaInstance) {

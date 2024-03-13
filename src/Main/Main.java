@@ -2,7 +2,7 @@
 package Main;
 
 
-import Components.Panel;
+import Components.Compilador;
 
 
 
@@ -25,7 +25,7 @@ public class Main {
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Panel().setVisible(true);
+                new Compilador().setVisible(true);
             }
         });
         

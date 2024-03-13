@@ -13,7 +13,9 @@ parser code
 
     public void syntax_error(Symbol s)
     {
-            System.err.println("Error Sintactico: no se espera "+ s.value + " - Fila: " + s.right + " - Columna: " + s.left + ". Recuperado" );
+            if(s.value != null)
+                Util.Reports.agregarTokenErr("No se espera: "+ s.value, "error sintactico", s.right, s.left);  
+                System.err.println("Error Sintactico: no se espera "+ s.value.toString() + " - Fila: " + s.right + " - Columna: " + s.left + ". Recuperado" );
     }
 
     public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
@@ -30,19 +32,21 @@ action code
 
 
 //------> Declaración de terminales
-terminal String  PARDER, PARIZQ, PYC;
+terminal String EXCL, PARDER, PARIZQ, PYC;
 terminal String ENTERO, CADENA, ID, DECIMAL;
 terminal String COMA, IGUAL;
-terminal String VAR, DOUBLEVAR, DOSP, MENORQ, END, GUION, PROGRAM, ENDPROGRAM, MAYORQ; 
-terminal String MAS, CHARVAR, CORIZQ, CORDER, ARR, IDARR;
+terminal String MAS,VAR, DOUBLEVAR, DOSP, MENORQ, END, GUION, PROGRAM, ENDPROGRAM, MAYORQ; 
+terminal String CHARVAR, CORIZQ, CORDER, ARR, IDARR;
 terminal String SUMA, RESTA, MULTI, DIV, MOD;
 terminal String MEDIA, MEDIANA, MODA, VARIANZA, MAX, MIN, PRINT, CONSOLE, COLUMN;
+terminal String GRAPHPIE, TITULO, LABEL, VALUES, EXEC, GRAPPIE, GRAPBAR, GRAPHBAR; 
+terminal String EJEX, EJEY, TITX, TITY, GRAPHLINE, GRAPLINE, HISTOGRAM;
 
 //------> Declaración de no terminales
 non terminal inicio;
-non terminal listainstr,  listaValoresDouble, listaValoresChar;
-non terminal instruccion, expresionDouble, expresionChar, operaciones, funciones;
-non terminal printN, variable, valor, imp;
+non terminal listainstr,  listaValores;
+non terminal instruccion, expresion, operaciones, funciones, graficas;
+non terminal printN, variable, valor, imp, arrays, parametros;
 
 //------> PRECEDENCIA
 precedence left MAS;
@@ -63,30 +67,60 @@ listainstr ::= listainstr instruccion
 instruccion ::= printN
     | variable
     |funciones
+    |graficas
     | error PYC
 ;
 
 
+//Para graficar
+
+graficas ::= GRAPHPIE PARIZQ parametros  PARDER END PYC {: Graphics.Graphics.Pie(); :}
+            |GRAPHBAR PARIZQ parametros PARDER END PYC {: Graphics.Graphics.Barras(); :}
+            |GRAPHLINE PARIZQ parametros PARDER END PYC {: Graphics.Graphics.Linea(); :}
+            |HISTOGRAM PARIZQ parametros PARDER END PYC {: Graphics.Graphics.Histograma(); :}
+;
+
+
+parametros ::= LABEL DOSP DOSP CHARVAR CORIZQ CORDER IGUAL CORIZQ listaValores:val CORDER END PYC parametros {: Graphics.Graphics.agregarOActualizar("label", val); :}
+             | VALUES DOSP DOSP DOUBLEVAR IGUAL CORIZQ listaValores:val CORDER END PYC parametros {: Graphics.Graphics.agregarOActualizar("values", val); :}
+             | TITULO DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC parametros {: Graphics.Graphics.agregarOActualizar("titulo", val); :}
+             | EJEX DOSP DOSP CHARVAR CORIZQ CORDER IGUAL CORIZQ listaValores: val CORDER END PYC parametros {: Graphics.Graphics.agregarOActualizar("ejeX", val); :}
+             | EJEY DOSP DOSP DOUBLEVAR IGUAL CORIZQ listaValores: val CORDER END PYC parametros {: Graphics.Graphics.agregarOActualizar("ejeY", val); :}
+             | TITX DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC parametros {: Graphics.Graphics.agregarOActualizar("tituloX", val); :}
+             | TITY DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC parametros {: Graphics.Graphics.agregarOActualizar("tituloY", val); :}
+             
+             | LABEL DOSP DOSP CHARVAR CORIZQ CORDER IGUAL listaValores:val END PYC  {: Graphics.Graphics.agregarOActualizar("label", val); :}
+             | VALUES DOSP DOSP DOUBLEVAR IGUAL listaValores:val END PYC             {: Graphics.Graphics.agregarOActualizar("values", val); :}
+             | TITULO DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC    {: Graphics.Graphics.agregarOActualizar("titulo", val); :}
+             | EJEX DOSP DOSP CHARVAR CORIZQ CORDER IGUAL CORIZQ listaValores: val CORDER END PYC  {: Graphics.Graphics.agregarOActualizar("ejeX", val); :}
+             | EJEY DOSP DOSP DOUBLEVAR IGUAL CORIZQ listaValores: val CORDER END PYC  {: Graphics.Graphics.agregarOActualizar("ejeY", val); :}
+             | TITX DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC  {: Graphics.Graphics.agregarOActualizar("tituloX", val); :}
+             | TITY DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC  {: Graphics.Graphics.agregarOActualizar("tituloY", val); :}
+             | EXEC GRAPHBAR END PYC
+             | EXEC GRAPHPIE END PYC
+             | EXEC GRAPHLINE END PYC
+             | EXEC HISTOGRAM END PYC
+;
+
 //Para imprimer en consola
 
 printN ::= CONSOLE DOSP DOSP PRINT IGUAL imp:val  END PYC    {: Util.Instruction.Print(val); :} 
-          |CONSOLE DOSP DOSP COLUMN IGUAL expresionChar:var GUION MAYORQ expresionDouble:val  END PYC    {: Util.Instruction.PrintArr(val, var.toString()); :}
-          //|CONSOLE DOSP DOSP COLUMN IGUAL expresionChar:var GUION MAYORQ CORIZQ listaGeneral:val CORDER END PYC    {: Util.Instruction.PrintArr(val, var.toString()); :}
-         
+          |CONSOLE DOSP DOSP COLUMN IGUAL expresion:var GUION MAYORQ arrays:val  END PYC    {: Util.Instruction.PrintArr(val, var.toString()); :}
+     
 ; 
 
 //Asignaciones de variales
-variable ::= VAR DOSP DOUBLEVAR DOSP DOSP  ID:var MENORQ GUION expresionDouble:val END PYC     
+variable ::= VAR DOSP DOUBLEVAR DOSP DOSP  ID:var MENORQ GUION expresion:val END PYC     
     {:Util.Instruction.tablaVariables.put(var.toString(), val.toString());  :}
-    | VAR DOSP CHARVAR CORIZQ CORDER DOSP DOSP ID:var MENORQ GUION expresionChar:val END PYC
+    | VAR DOSP CHARVAR CORIZQ CORDER DOSP DOSP ID:var MENORQ GUION expresion:val END PYC
       {:Util.Instruction.tablaVariables.put(var.toString(), val.toString()); :}
-    | ARR DOSP DOUBLEVAR DOSP DOSP IDARR:var MENORQ GUION CORIZQ listaValoresDouble:val CORDER END PYC
+    | ARR DOSP DOUBLEVAR DOSP DOSP IDARR:var MENORQ GUION CORIZQ listaValores:val CORDER END PYC
       {:Util.Instruction.tablaVariables.put(var.toString(), (LinkedList<Double>)  val); Util.Instruction.mostrarTablaVariables();:}
-    | ARR DOSP DOUBLEVAR DOSP DOSP IDARR:var MENORQ GUION  expresionDouble:val END PYC
+    | ARR DOSP DOUBLEVAR DOSP DOSP IDARR:var MENORQ GUION  expresion:val END PYC
       {:Util.Instruction.tablaVariables.put(var.toString(), (LinkedList<Double>)  val); Util.Instruction.mostrarTablaVariables();:}
-    | ARR DOSP CHARVAR CORIZQ CORDER DOSP DOSP IDARR:var MENORQ GUION CORIZQ listaValoresChar:val CORDER END PYC
+    | ARR DOSP CHARVAR CORIZQ CORDER DOSP DOSP IDARR:var MENORQ GUION CORIZQ listaValores:val CORDER END PYC
       {:Util.Instruction.tablaVariables.put(var.toString(), (LinkedList<String>) val); Util.Instruction.mostrarTablaVariables(); :}
-    | ARR DOSP CHARVAR CORIZQ CORDER DOSP DOSP IDARR:var MENORQ GUION  expresionChar:val  END PYC
+    | ARR DOSP CHARVAR CORIZQ CORDER DOSP DOSP IDARR:var MENORQ GUION  expresion:val  END PYC
       {:Util.Instruction.tablaVariables.put(var.toString(), (LinkedList<String>) val); Util.Instruction.mostrarTablaVariables(); :}
     | VAR DOSP DOUBLEVAR DOSP DOSP ID:var MENORQ GUION operaciones:val END PYC
       {:Util.Instruction.tablaVariables.put(var.toString(), val.toString() ); Util.Instruction.mostrarTablaVariables(); :}
@@ -97,43 +131,43 @@ variable ::= VAR DOSP DOUBLEVAR DOSP DOSP  ID:var MENORQ GUION expresionDouble:v
 
 //funciones de estadistica
 
-funciones ::= MEDIA PARIZQ CORIZQ listaValoresDouble:val CORDER PARDER {: RESULT = Util.Estadistica.Media(val); :}
-            | MEDIANA PARIZQ CORIZQ listaValoresDouble:val CORDER PARDER {: RESULT = Util.Estadistica.Mediana(val); :}
-            | MODA PARIZQ CORIZQ listaValoresDouble:val CORDER PARDER {: RESULT = Util.Estadistica.Moda(val); :}
-            | VARIANZA PARIZQ CORIZQ listaValoresDouble:val CORDER PARDER {: RESULT = Util.Estadistica.Varianza(val); :}
-            | MAX PARIZQ CORIZQ listaValoresDouble:val CORDER PARDER {: RESULT = Util.Estadistica.Max(val); :}
-            | MIN PARIZQ CORIZQ listaValoresDouble:val CORDER PARDER {: RESULT = Util.Estadistica.Min(val); :}
-            |MEDIA PARIZQ  expresionDouble:val  PARDER {: RESULT = Util.Estadistica.Media(val); :}
-            | MEDIANA PARIZQ  expresionDouble:val  PARDER {: RESULT = Util.Estadistica.Mediana(val); :}
-            | MODA PARIZQ  expresionDouble:val  PARDER {: RESULT = Util.Estadistica.Moda(val); :}
-            | VARIANZA PARIZQ  expresionDouble:val  PARDER {: RESULT = Util.Estadistica.Varianza(val); :}
-            | MAX PARIZQ  expresionDouble:val  PARDER {: RESULT = Util.Estadistica.Max(val); :}
-            | MIN PARIZQ  expresionDouble:val  PARDER {: RESULT = Util.Estadistica.Min(val); :}
+funciones ::= MEDIA PARIZQ CORIZQ listaValores:val CORDER PARDER {: RESULT = Util.Estadistica.Media(val); :}
+            | MEDIANA PARIZQ CORIZQ listaValores:val CORDER PARDER {: RESULT = Util.Estadistica.Mediana(val); :}
+            | MODA PARIZQ CORIZQ listaValores:val CORDER PARDER {: RESULT = Util.Estadistica.Moda(val); :}
+            | VARIANZA PARIZQ CORIZQ listaValores:val CORDER PARDER {: RESULT = Util.Estadistica.Varianza(val); :}
+            | MAX PARIZQ CORIZQ listaValores:val CORDER PARDER {: RESULT = Util.Estadistica.Max(val); :}
+            | MIN PARIZQ CORIZQ listaValores:val CORDER PARDER {: RESULT = Util.Estadistica.Min(val); :}
+            | MEDIA PARIZQ  expresion:val  PARDER {: RESULT = Util.Estadistica.Media(val); :}
+            | MEDIANA PARIZQ  expresion:val  PARDER {: RESULT = Util.Estadistica.Mediana(val); :}
+            | MODA PARIZQ  expresion:val  PARDER {: RESULT = Util.Estadistica.Moda(val); :}
+            | VARIANZA PARIZQ  expresion:val  PARDER {: RESULT = Util.Estadistica.Varianza(val); :}
+            | MAX PARIZQ  expresion:val  PARDER {: RESULT = Util.Estadistica.Max(val); :}
+            | MIN PARIZQ  expresion:val  PARDER {: RESULT = Util.Estadistica.Min(val); :}
 ;
 
 
-//Usado para el array de tipo double que admite operaciones y funciones
-listaValoresDouble ::=  expresionDouble:val COMA listaValoresDouble:resto
+//Usado para los arrays
+listaValores ::=  expresion:val COMA listaValores:resto
                {:
                    LinkedList<String> resultado = (LinkedList<String>) resto;
                    resultado.addFirst(val.toString()); 
                    RESULT = resultado;
                :}
     
-    | operaciones:val COMA listaValoresDouble:resto
+    | operaciones:val COMA listaValores:resto
                 {:
                    LinkedList<String> resultado = (LinkedList<String>) resto;
                    resultado.addFirst(val.toString()); 
                    RESULT = resultado;
                :}
-    | funciones:val COMA listaValoresDouble:resto
+    | funciones:val COMA listaValores:resto
                 {:
                    LinkedList<String> resultado = (LinkedList<String>) resto;
                    resultado.addFirst(val.toString()); 
                    RESULT = resultado;
                :}
 
-    | expresionDouble:val
+    | expresion:val
                {:
                    LinkedList<String> resultado = new LinkedList<String>();
                    resultado.add(val.toString()); 
@@ -152,43 +186,25 @@ listaValoresDouble ::=  expresionDouble:val COMA listaValoresDouble:resto
                :}
 ;
 
+//Usado para la impresion de arrays
 
-//Usado para las producciones de print
-
-
-//Usado para el array de tipo char
-
-listaValoresChar ::=   expresionChar:val COMA listaValoresChar:resto
-               {: 
-                   LinkedList<String> resultado = (LinkedList<String>) resto;
-                   resultado.addFirst(val.toString()); 
-                   RESULT = resultado;
-               :}
-    | expresionChar:val
-               {: 
-                   LinkedList<String> resultado = new LinkedList<String>();
-                   resultado.add(val.toString()); 
-                   RESULT = resultado;
-               :}
-;
-
-
-//No terminal de las expresiones utilizadas para la declaracion de variables de arryas de tipo double
-expresionDouble ::= ENTERO:val    {: RESULT = val.toString(); :}
-        | DECIMAL:val       {: RESULT = val.toString(); :}
-        | ID:val            {: RESULT = Util.Instruction.tablaVariables.get(val.toString()); :}
-        | IDARR:val            {: RESULT = Util.Instruction.tablaVariables.get(val); :}
-      
+    arrays::= IDARR:val {: RESULT = Util.Instruction.tablaVariables.get(val.toString()); :}
+             |CORIZQ listaValores:val CORDER {: RESULT = val; :}
         
 ;
 
 
-//No terminal de las expresiones utilizadas para la declaracion de variables y arrays de tipo char
-expresionChar ::= CADENA:val        {: RESULT = val.toString(); :} 
-                | ID:val            {: RESULT = Util.Instruction.tablaVariables.get(val.toString()); :}
-                | IDARR:val            {: RESULT = Util.Instruction.tablaVariables.get(val.toString()); :}
-            
+
+//No terminal de las expresiones utilizadas para la declaracion de variables y de arryas 
+expresion ::= ENTERO:val    {: RESULT = val.toString(); :}
+        | CADENA: val       {: RESULT = val.toString(); :}
+        | DECIMAL:val       {: RESULT = val.toString(); :}
+        | ID:val            {: RESULT = Util.Instruction.tablaVariables.get(val.toString()); :}
+        | IDARR:val            {: RESULT = Util.Instruction.tablaVariables.get(val); :}
+           
 ;
+
+
 
 
 //tiene las operaciones aritmeticas completas scon las anidaciones que pueden haber 
@@ -198,17 +214,17 @@ operaciones ::=SUMA PARIZQ operaciones:val1 COMA operaciones:val2 PARDER {: RESU
             | MULTI PARIZQ operaciones:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Multiplicacion(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
             | DIV PARIZQ operaciones:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Division(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
             | MOD PARIZQ operaciones:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Modulo(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
-            |SUMA PARIZQ valor:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Suma(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | SUMA PARIZQ valor:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Suma(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
             | RESTA PARIZQ valor:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Resta(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
             | MULTI PARIZQ valor:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Multiplicacion(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
             | DIV PARIZQ valor:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Division(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
             | MOD PARIZQ valor:val1 COMA operaciones:val2 PARDER {: RESULT = Util.Operations.Modulo(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
-            |SUMA PARIZQ operaciones:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Suma(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | SUMA PARIZQ operaciones:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Suma(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
             | RESTA PARIZQ operaciones:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Resta(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
             | MULTI PARIZQ operaciones:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Multiplicacion(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
             | DIV PARIZQ operaciones:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Division(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
             | MOD PARIZQ operaciones:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Modulo(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
-            |SUMA PARIZQ valor:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Suma(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
+            | SUMA PARIZQ valor:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Suma(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
             | RESTA PARIZQ valor:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Resta(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
             | MULTI PARIZQ valor:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Multiplicacion(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}
             | DIV PARIZQ valor:val1 COMA valor:val2 PARDER {: RESULT = Util.Operations.Division(Double.parseDouble(val1.toString()) , Double.parseDouble(val2.toString()));:}

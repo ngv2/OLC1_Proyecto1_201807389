@@ -4,7 +4,7 @@
  */
 package Graphics;
 
-import Components.ConsolaManager;
+import Components.Consola;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -155,7 +155,7 @@ public class Graphics {
     private static void analisisArreglo(LinkedList<Double> datos) {
         // Verifica si la lista es un LinkedList de tipo Double
             
-            JTextArea consola = ConsolaManager.getConsola();
+            JTextArea consola = Consola.getConsola();
             consola.append("   >>output:\n");
             System.out.println("Analisis Arreglo");
             consola.append("   __________________________\n");

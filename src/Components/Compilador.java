@@ -10,12 +10,12 @@ package Components;
  *
  * @author Usuario
  */
-public class  Panel extends javax.swing.JFrame {
+public class  Compilador extends javax.swing.JFrame {
 
     /**
      * Creates new form Panel
      */
-    public Panel() {
+    public Compilador() {
         initComponents();
     }
 
@@ -36,13 +36,12 @@ public class  Panel extends javax.swing.JFrame {
         btnGuardarArchivo = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         btnNuevoArchivo = new javax.swing.JButton();
-        btnReportes = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 204, 255));
 
         Consola.setBackground(new java.awt.Color(204, 204, 255));
-        ConsolaManager.setConsola(Consola);
+        Components.Consola.setConsola(Consola);
         Consola.setColumns(20);
         Consola.setForeground(new java.awt.Color(255, 255, 255));
         Consola.setRows(5);
@@ -87,14 +86,6 @@ public class  Panel extends javax.swing.JFrame {
             }
         });
 
-        btnReportes.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        btnReportes.setText("REPORTES");
-        btnReportes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReportesActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -113,9 +104,7 @@ public class  Panel extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnGuardarArchivo)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnReportes))))
+                                .addComponent(btnGuardarArchivo))))
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
@@ -127,8 +116,7 @@ public class  Panel extends javax.swing.JFrame {
                     .addComponent(btnAbrirArchivo)
                     .addComponent(btnAnalizar)
                     .addComponent(btnGuardarArchivo)
-                    .addComponent(btnNuevoArchivo)
-                    .addComponent(btnReportes))
+                    .addComponent(btnNuevoArchivo))
                 .addGap(18, 18, 18)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
@@ -137,8 +125,6 @@ public class  Panel extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(59, 59, 59))
         );
-
-        btnAbrirArchivo.getAccessibleContext().setAccessibleName("ABRIR ARCHIVO");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -156,6 +142,21 @@ public class  Panel extends javax.swing.JFrame {
         Consola.setText("");
         Analisis.analizarContenido(jTabbedPane1, Consola);
         
+//Generar reportes
+        Util.HTMLGenerator.generateHTML(Util.Reports.listaTokens, "Lista de Tokens", "TokensCorrectos");
+        Util.Reports.listaTokens.clear();
+        
+        
+        // si hay errores en la entrada tambien genera el archivo de errores
+        Util.HTMLGenerator.generateHTMLErr(Util.Reports.listaErroresTok, "Lista de Errores", "ReporteErrores");
+        Util.Reports.listaErroresTok.clear();
+        
+        
+        //tabla de simbolos
+        
+        Util.HTMLGenerator.generateHTMLTabSimb(Util.Instruction.tablaVariables, "Tabla de Simbolos", "TablaSimbolos");
+        Util.Instruction.tablaVariables.clear();
+        
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
     private void btnGuardarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarArchivoActionPerformed
@@ -169,26 +170,6 @@ public class  Panel extends javax.swing.JFrame {
         TabManager.agregarNuevaPestana(jTabbedPane1);
     }//GEN-LAST:event_btnNuevoArchivoActionPerformed
 
-    private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
-        // TODO add your handling code here:
-        
-        //Reporte de tokens
-        Util.HTMLGenerator.generateHTML(Util.Reports.listaTokens, "Reporte de Tokens", "Tokens");
-        Util.Reports.listaTokens.clear();
-        
-        
-        // si hay errores en la entrada tambien genera el archivo de errores
-        Util.HTMLGenerator.generateHTMLErr(Util.Reports.listaErroresTok, "Reporte de Errores", "Errores");
-        Util.Reports.listaErroresTok.clear();
-        
-        
-        //tabla de simbolos
-        
-        Util.HTMLGenerator.generateHTMLTabSimb(Util.Instruction.tablaVariables, "Tabla de Simbolos", "TablaSimbolos");
-        Util.Instruction.tablaVariables.clear();
-        
-    }//GEN-LAST:event_btnReportesActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -199,7 +180,6 @@ public class  Panel extends javax.swing.JFrame {
     private javax.swing.JButton btnAnalizar;
     private javax.swing.JButton btnGuardarArchivo;
     private javax.swing.JButton btnNuevoArchivo;
-    private javax.swing.JButton btnReportes;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
