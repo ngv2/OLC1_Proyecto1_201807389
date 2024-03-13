@@ -4,17 +4,13 @@
  */
 package Main;
 
-import Tokens.ErrToken;
-import Tokens.Token;
-import analizador.Parser;
+
+
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import analizador.*;
+
 /**
  *
- * @author lets
+ * @author Usuario
  */
 public class Ejecutador {
     
@@ -35,22 +31,21 @@ public class Ejecutador {
           // Realizar Analisis
     public  void analizar (String entrada){
         
-         analizador.Lexer lexer = new analizador.Lexer(new StringReader(entrada)); 
-        try {
          
+        try {
+            analizador.Lexer lexer = new analizador.Lexer(new StringReader(entrada)); 
             analizador.Parser parser = new analizador.Parser(lexer);
             parser.parse();
             
             
             
-
-            
-            
         } catch (Exception e) {
+            
+            
             System.out.println("Error fatal en compilación de entrada.");
             // Imprimir tokens en consola
              
-            System.out.println(e);
+            System.out.println(e.getMessage());
         } 
     } 
 }

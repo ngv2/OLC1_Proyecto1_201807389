@@ -4,12 +4,7 @@
  */
 package Components;
 
-import Main.Ejecutador;
-import java.awt.BorderLayout;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+
 
 /**
  *
@@ -41,19 +36,23 @@ public class  Panel extends javax.swing.JFrame {
         btnGuardarArchivo = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         btnNuevoArchivo = new javax.swing.JButton();
+        btnReportes = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(204, 204, 255));
 
-        Consola.setBackground(new java.awt.Color(51, 51, 51));
+        Consola.setBackground(new java.awt.Color(204, 204, 255));
         ConsolaManager.setConsola(Consola);
         Consola.setColumns(20);
         Consola.setForeground(new java.awt.Color(255, 255, 255));
         Consola.setRows(5);
         jScrollPane1.setViewportView(Consola);
 
-        jLabel1.setText("Consola");
+        jLabel1.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel1.setText("CONSOLA");
 
-        btnAbrirArchivo.setText("Abrir Archivo");
+        btnAbrirArchivo.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        btnAbrirArchivo.setText("ABRIR ARCHIVO");
         btnAbrirArchivo.setActionCommand("Abrir archivo");
         btnAbrirArchivo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -61,24 +60,38 @@ public class  Panel extends javax.swing.JFrame {
             }
         });
 
-        btnAnalizar.setText("Analizar");
+        btnAnalizar.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        btnAnalizar.setText("ANALIZAR");
         btnAnalizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAnalizarActionPerformed(evt);
             }
         });
 
-        btnGuardarArchivo.setText("Guardar archivo");
+        btnGuardarArchivo.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        btnGuardarArchivo.setText("GUARDAR ARCHIVO");
         btnGuardarArchivo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGuardarArchivoActionPerformed(evt);
             }
         });
 
-        btnNuevoArchivo.setText("Nuevo Archivo");
+        jTabbedPane1.setBackground(new java.awt.Color(255, 255, 255));
+        jTabbedPane1.setForeground(new java.awt.Color(255, 255, 255));
+
+        btnNuevoArchivo.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        btnNuevoArchivo.setText("NUEVO ARCHIVO");
         btnNuevoArchivo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNuevoArchivoActionPerformed(evt);
+            }
+        });
+
+        btnReportes.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        btnReportes.setText("REPORTES");
+        btnReportes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportesActionPerformed(evt);
             }
         });
 
@@ -87,25 +100,24 @@ public class  Panel extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 719, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(16, 16, 16)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(26, 26, 26)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 709, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(btnAbrirArchivo)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(btnNuevoArchivo)
-                                    .addGap(29, 29, 29)
-                                    .addComponent(btnAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(btnGuardarArchivo))))))
-                .addContainerGap(703, Short.MAX_VALUE))
+                .addGap(16, 16, 16)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 719, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 709, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnAbrirArchivo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnNuevoArchivo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnAnalizar, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnGuardarArchivo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnReportes))))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -115,15 +127,18 @@ public class  Panel extends javax.swing.JFrame {
                     .addComponent(btnAbrirArchivo)
                     .addComponent(btnAnalizar)
                     .addComponent(btnGuardarArchivo)
-                    .addComponent(btnNuevoArchivo))
+                    .addComponent(btnNuevoArchivo)
+                    .addComponent(btnReportes))
                 .addGap(18, 18, 18)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel1)
-                .addGap(23, 23, 23)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(59, 59, 59))
         );
+
+        btnAbrirArchivo.getAccessibleContext().setAccessibleName("ABRIR ARCHIVO");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -137,6 +152,7 @@ public class  Panel extends javax.swing.JFrame {
 
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
         // TODO add your handling code here:
+        Util.Reports.listaTokens.clear();
         Consola.setText("");
         Analisis.analizarContenido(jTabbedPane1, Consola);
         
@@ -153,6 +169,26 @@ public class  Panel extends javax.swing.JFrame {
         TabManager.agregarNuevaPestana(jTabbedPane1);
     }//GEN-LAST:event_btnNuevoArchivoActionPerformed
 
+    private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
+        // TODO add your handling code here:
+        
+        //Reporte de tokens
+        Util.HTMLGenerator.generateHTML(Util.Reports.listaTokens, "Reporte de Tokens", "Tokens");
+        Util.Reports.listaTokens.clear();
+        
+        
+        // si hay errores en la entrada tambien genera el archivo de errores
+        Util.HTMLGenerator.generateHTMLErr(Util.Reports.listaErroresTok, "Reporte de Errores", "Errores");
+        Util.Reports.listaErroresTok.clear();
+        
+        
+        //tabla de simbolos
+        
+        Util.HTMLGenerator.generateHTMLTabSimb(Util.Instruction.tablaVariables, "Tabla de Simbolos", "TablaSimbolos");
+        Util.Instruction.tablaVariables.clear();
+        
+    }//GEN-LAST:event_btnReportesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -163,6 +199,7 @@ public class  Panel extends javax.swing.JFrame {
     private javax.swing.JButton btnAnalizar;
     private javax.swing.JButton btnGuardarArchivo;
     private javax.swing.JButton btnNuevoArchivo;
+    private javax.swing.JButton btnReportes;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;

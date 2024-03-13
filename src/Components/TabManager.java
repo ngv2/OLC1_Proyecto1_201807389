@@ -85,7 +85,7 @@ public class TabManager {
         
          for (FileInput elemento : fi) {
             if(elemento.getName().equals( tabbedPane.getTitleAt(index))){
-                System.out.println("pestaña de nombre: " + tabbedPane.getName());
+                System.out.println("pestaña de nombre: " + tabbedPane.getTitleAt(index));
                 System.out.println("guardado: " + elemento.isExist());
                 archivoYaGuardado = elemento.isExist();
                 pathArchGuar = elemento.getDir();

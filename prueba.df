@@ -1,0 +1,8 @@
+graphPie(
+titulo::char[] = “Titulo inicial” end;
+label::char[] = [“dato incorrecto”, “dato2” ] end;
+values::double = [20, 70] end;
+titulo::char[] = “Titulo que se debe mostrar” end;
+label::char[] = [“dato correcto”, “dato2” ] end;
+EXEC grapPie end;
+) end;
