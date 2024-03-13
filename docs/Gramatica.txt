@@ -1,0 +1,32 @@
+// ------> Expresiones Regulares 
+
+entero = [0-9]+
+decimal = [0-9]+("."[0-9]+)?
+cadena = [\"][^\n\"]*[\"]
+id = [a-zA-Z][a-zA-Z0-9_]*
+
+//------> Declaración de no terminales
+non terminal inicio;
+non terminal listainstr, listaValores;
+non terminal instruccion, expresion, operaciones, funciones, graficas;
+non terminal printN, variable, valor, imp, arrays, parametros;
+
+//------> Definir Simbolo Inicial
+start with inicio; 
+
+
+// ------------>  Producciones  <------------
+
+inicio ::= PROGRAM listainstr ENDPROGRAM
+;
+
+listainstr ::= listainstr instruccion
+    | instruccion
+;
+
+instruccion ::= printN
+    | variable
+    | funciones
+    | graficas
+    | error PYC
+;

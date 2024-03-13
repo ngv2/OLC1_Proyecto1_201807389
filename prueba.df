@@ -1,8 +1,36 @@
+program
 graphPie(
-titulo::char[] = “Titulo inicial” end;
-label::char[] = [“dato incorrecto”, “dato2” ] end;
+titulo::char[] = "Titulo inicial" end;
+label::char[] = ["dato incorrecto", "dato2" ] end;
 values::double = [20, 70] end;
-titulo::char[] = “Titulo que se debe mostrar” end;
-label::char[] = [“dato correcto”, “dato2” ] end;
+titulo::char[] = "Titulo que se debe mostrar" end;
+label::char[] = ["dato correcto", "dato2" ] end;
 EXEC grapPie end;
 ) end;
+
+graphBar(
+titulo::char[] = "Estudiantes" end;
+ejeX::char[] = ["1 Parcial", "2 parcial", "Final"] end;
+ejeY::double = [50, 30, 70] end;
+tituloX::char[] = "Actividades" end;
+tituloY::char[] = "Notas" end;
+EXEC grapBar end;
+) end;
+
+graphLine(
+titulo::char[] = "Grafica de Linea" end;
+ejeX::char[] = ["1 Parcial", "2 parcial", "Final"] end;
+ejeY::double = [50, 30, 70] end;
+tituloX::char[] = "Actividades" end;
+tituloY::char[] = "Notas" end;
+EXEC grapLine end;
+) end;
+Histogram(
+titulo::char[] = "Analisis de Arreglo" end;
+values::char[] = [2,2,2,5,5,7,8] end;
+EXEC Histogram end;
+) end;
+
+var: double :: hola <- [1,2,3,4,5];
+arr: double :: @arr1 <- [1,2,3,4,5] end;
+end program
