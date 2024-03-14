@@ -24,17 +24,14 @@ public class TabManager {
             String nombreArchivo = fileChooser.getSelectedFile().getName();
             String contenidoArchivo = leerContenidoArchivo(fileChooser.getSelectedFile().getPath());
 
-            // Crea un nuevo JPanel para el contenido de la pestaña
             JPanel newPanel = new JPanel(new BorderLayout());
 
-            // Agrega un JTextArea al JPanel y establece el contenido del archivo
             JTextArea textArea = new JTextArea(contenidoArchivo);
             newPanel.add(new JScrollPane(textArea), BorderLayout.CENTER);
             
             FileInput fi = new FileInput(nombreArchivo,fileChooser.getSelectedFile().getPath() ,true);
             StateFiles.estadoGuardado.add(fi);
             
-            // Añade la nueva pestaña al JTabbedPane
             tabbedPane.addTab(nombreArchivo, newPanel);
         }
     }
@@ -47,33 +44,29 @@ public class TabManager {
                 contenido.append(linea).append("\n");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error: "+e.getMessage());
         }
         return contenido.toString();
     }
     
     
     public static void agregarNuevaPestana(JTabbedPane tabbedPane) {
-        // Crea un nuevo JPanel para el contenido de la pestaña
             JPanel newPanel = new JPanel(new BorderLayout());
-
-            // Agrega un JTextArea al JPanel y establece el contenido del archivo
             JTextArea textArea = new JTextArea();
             newPanel.add(new JScrollPane(textArea), BorderLayout.CENTER);
              
-            FileInput fi = new FileInput("Nuevo"+(tabbedPane.getTabCount() + 1), "" ,false);
+            FileInput fi = new FileInput("Archivo"+(tabbedPane.getTabCount() + 1), "" ,false);
             StateFiles.estadoGuardado.add(fi);
             
-            tabbedPane.addTab("Nuevo"+(tabbedPane.getTabCount() + 1), newPanel);
+            tabbedPane.addTab("Archivo"+(tabbedPane.getTabCount() + 1), newPanel);
 
-        // No se necesita establecer la instancia del JTextArea en ConsolaManager para esta pestaña
     }
  
     
  public static void guardarArchivo(JTabbedPane tabbedPane) {
     int index = tabbedPane.getSelectedIndex();
     if (index != -1) {
-        // Obtiene el componente de la pestaña activa
+
         Component selectedComponent = tabbedPane.getComponentAt(index);
         
         
@@ -91,22 +84,16 @@ public class TabManager {
                 pathArchGuar = elemento.getDir();
             }
         }
-        
-        // Verifica si el componente es un JPanel
+
         if (selectedComponent instanceof JPanel) {
-            // Cast a JPanel
             JPanel selectedPanel = (JPanel) selectedComponent;
 
-            // Busca el JTextArea dentro del JPanel
             JTextArea textArea = encontrarJTextArea(selectedPanel);
 
-            // Verifica si se encontró el JTextArea
             if (textArea != null) {
-                // Obtiene el contenido del JTextArea
                 String contenido = textArea.getText();
 
 		if (!archivoYaGuardado) {
-                    // Si el archivo no ha sido guardado, permite al usuario elegir la ubicación y el nombre del archivo
                     JFileChooser fileChooser = new JFileChooser();
                     int result = fileChooser.showSaveDialog(null);
 
@@ -125,7 +112,6 @@ public class TabManager {
                                                 
                                             }
                                         }
-                                    // Establece el nombre de la pestaña al nombre del archivo
                                     tabbedPane.setTitleAt(index, archivo.getName());
                                     JOptionPane.showMessageDialog(null, "Archivo guardado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                             } catch (IOException ex) {
@@ -133,10 +119,6 @@ public class TabManager {
                             }
                     }
 		} else {
-                    // Si el archivo ya ha sido guardado, sobrescribe el archivo asociado a la pestaña
-                    // Usa la ruta existente
-			
-
 			try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathArchGuar))) {
 				writer.write(contenido);
                                 
@@ -159,7 +141,6 @@ public class TabManager {
         if (component instanceof JTextArea) {
             return (JTextArea) component;
         } else if (component instanceof Container) {
-            // Busca recursivamente dentro de los contenedores anidados
             JTextArea nestedTextArea = encontrarJTextArea((Container) component);
             if (nestedTextArea != null) {
                 return nestedTextArea;

@@ -4,13 +4,9 @@
  */
 package Util;
 
-import Model.Token;
+import Modelo.Token;
 import java.util.LinkedList;
 
-/**
- *
- * @author argonzalez
- */
 public class Reports {
     
     public static LinkedList<Token> listaTokens = new LinkedList <Token>();

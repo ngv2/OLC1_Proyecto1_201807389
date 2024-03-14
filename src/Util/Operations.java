@@ -4,10 +4,6 @@
  */
 package Util;
 
-/**
- *
- * @author lets
- */
 public class Operations{ 
         
         public Operations(){

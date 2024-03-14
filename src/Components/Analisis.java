@@ -3,44 +3,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Components;
-import Main.Ejecutador;
+import OLC1_Proyecto1_201807389.Inicial;
 import javax.swing.*;
 import java.awt.*;
-/**
- *
- * @author Usuario
- */
 public class Analisis {
     public static void analizarContenido(JTabbedPane tabbedPane, JTextArea resultadoTextArea) {
-        // Obtiene el índice de la pestaña activa
         int index = tabbedPane.getSelectedIndex();
-
-        // Verifica si hay alguna pestaña activa
         if (index != -1) {
-            // Obtiene el componente de la pestaña activa
             Component selectedComponent = tabbedPane.getComponentAt(index);
-
-            // Verifica si el componente es un JPanel
             if (selectedComponent instanceof JPanel) {
-                // Cast a JPanel
                 JPanel selectedPanel = (JPanel) selectedComponent;
-
-                // Busca el JTextArea dentro del JPanel
                 JTextArea textArea = encontrarJTextArea(selectedPanel);
-
-                // Realiza el análisis utilizando el JTextArea
                 if (textArea != null) {
-                    Ejecutador ejecuta = new Ejecutador();
+                    Inicial ejecuta = new Inicial();
                     String contenido = textArea.getText();
                     ejecuta.analizar(contenido); 
-                    //resultadoTextArea.setText("Hola mundo el analisis fue completo");
                 }
             }
         }
     }
 
     private static JTextArea encontrarJTextArea(Container container) {
-        // Busca recursivamente un JTextArea dentro del contenedor
         for (Component component : container.getComponents()) {
             if (component instanceof JTextArea) {
                 return (JTextArea) component;

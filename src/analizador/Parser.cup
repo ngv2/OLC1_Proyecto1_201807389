@@ -48,9 +48,6 @@ non terminal listainstr,  listaValores;
 non terminal instruccion, expresion, operaciones, funciones, graficas;
 non terminal printN, variable, valor, imp, arrays, parametros;
 
-//------> PRECEDENCIA
-precedence left MAS;
-
 //------> Definir Simbolo Inicial
 start with inicio; 
 
@@ -74,28 +71,28 @@ instruccion ::= printN
 
 //Para graficar
 
-graficas ::= GRAPHPIE PARIZQ parametros  PARDER END PYC {: Graphics.Graphics.Pie(); :}
-            |GRAPHBAR PARIZQ parametros PARDER END PYC {: Graphics.Graphics.Barras(); :}
-            |GRAPHLINE PARIZQ parametros PARDER END PYC {: Graphics.Graphics.Linea(); :}
-            |HISTOGRAM PARIZQ parametros PARDER END PYC {: Graphics.Graphics.Histograma(); :}
+graficas ::= GRAPHPIE PARIZQ parametros  PARDER END PYC {: Graficas.Grafica.Pie(); :}
+            |GRAPHBAR PARIZQ parametros PARDER END PYC {: Graficas.Grafica.Barras(); :}
+            |GRAPHLINE PARIZQ parametros PARDER END PYC {: Graficas.Grafica.Linea(); :}
+            |HISTOGRAM PARIZQ parametros PARDER END PYC {: Graficas.Grafica.Histograma(); :}
 ;
 
 
-parametros ::= LABEL DOSP DOSP CHARVAR CORIZQ CORDER IGUAL CORIZQ listaValores:val CORDER END PYC parametros {: Graphics.Graphics.agregarOActualizar("label", val); :}
-             | VALUES DOSP DOSP DOUBLEVAR IGUAL CORIZQ listaValores:val CORDER END PYC parametros {: Graphics.Graphics.agregarOActualizar("values", val); :}
-             | TITULO DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC parametros {: Graphics.Graphics.agregarOActualizar("titulo", val); :}
-             | EJEX DOSP DOSP CHARVAR CORIZQ CORDER IGUAL CORIZQ listaValores: val CORDER END PYC parametros {: Graphics.Graphics.agregarOActualizar("ejeX", val); :}
-             | EJEY DOSP DOSP DOUBLEVAR IGUAL CORIZQ listaValores: val CORDER END PYC parametros {: Graphics.Graphics.agregarOActualizar("ejeY", val); :}
-             | TITX DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC parametros {: Graphics.Graphics.agregarOActualizar("tituloX", val); :}
-             | TITY DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC parametros {: Graphics.Graphics.agregarOActualizar("tituloY", val); :}
+parametros ::= LABEL DOSP DOSP CHARVAR CORIZQ CORDER IGUAL CORIZQ listaValores:val CORDER END PYC parametros {: Graficas.Grafica.agregarOActualizar("label", val); :}
+             | VALUES DOSP DOSP DOUBLEVAR IGUAL CORIZQ listaValores:val CORDER END PYC parametros {: Graficas.Grafica.agregarOActualizar("values", val); :}
+             | TITULO DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC parametros {: Graficas.Grafica.agregarOActualizar("titulo", val); :}
+             | EJEX DOSP DOSP CHARVAR CORIZQ CORDER IGUAL CORIZQ listaValores: val CORDER END PYC parametros {: Graficas.Grafica.agregarOActualizar("ejeX", val); :}
+             | EJEY DOSP DOSP DOUBLEVAR IGUAL CORIZQ listaValores: val CORDER END PYC parametros {: Graficas.Grafica.agregarOActualizar("ejeY", val); :}
+             | TITX DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC parametros {: Graficas.Grafica.agregarOActualizar("tituloX", val); :}
+             | TITY DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC parametros {: Graficas.Grafica.agregarOActualizar("tituloY", val); :}
              
-             | LABEL DOSP DOSP CHARVAR CORIZQ CORDER IGUAL listaValores:val END PYC  {: Graphics.Graphics.agregarOActualizar("label", val); :}
-             | VALUES DOSP DOSP DOUBLEVAR IGUAL listaValores:val END PYC             {: Graphics.Graphics.agregarOActualizar("values", val); :}
-             | TITULO DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC    {: Graphics.Graphics.agregarOActualizar("titulo", val); :}
-             | EJEX DOSP DOSP CHARVAR CORIZQ CORDER IGUAL CORIZQ listaValores: val CORDER END PYC  {: Graphics.Graphics.agregarOActualizar("ejeX", val); :}
-             | EJEY DOSP DOSP DOUBLEVAR IGUAL CORIZQ listaValores: val CORDER END PYC  {: Graphics.Graphics.agregarOActualizar("ejeY", val); :}
-             | TITX DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC  {: Graphics.Graphics.agregarOActualizar("tituloX", val); :}
-             | TITY DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC  {: Graphics.Graphics.agregarOActualizar("tituloY", val); :}
+             | LABEL DOSP DOSP CHARVAR CORIZQ CORDER IGUAL listaValores:val END PYC  {: Graficas.Grafica.agregarOActualizar("label", val); :}
+             | VALUES DOSP DOSP DOUBLEVAR IGUAL listaValores:val END PYC             {: Graficas.Grafica.agregarOActualizar("values", val); :}
+             | TITULO DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC    {: Graficas.Grafica.agregarOActualizar("titulo", val); :}
+             | EJEX DOSP DOSP CHARVAR CORIZQ CORDER IGUAL CORIZQ listaValores: val CORDER END PYC  {: Graficas.Grafica.agregarOActualizar("ejeX", val); :}
+             | EJEY DOSP DOSP DOUBLEVAR IGUAL CORIZQ listaValores: val CORDER END PYC  {: Graficas.Grafica.agregarOActualizar("ejeY", val); :}
+             | TITX DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC  {: Graficas.Grafica.agregarOActualizar("tituloX", val); :}
+             | TITY DOSP DOSP CHARVAR CORIZQ CORDER IGUAL expresion:val END PYC  {: Graficas.Grafica.agregarOActualizar("tituloY", val); :}
              | EXEC GRAPHBAR END PYC
              | EXEC GRAPHPIE END PYC
              | EXEC GRAPHLINE END PYC
@@ -115,17 +112,17 @@ variable ::= VAR DOSP DOUBLEVAR DOSP DOSP  ID:var MENORQ GUION expresion:val END
     | VAR DOSP CHARVAR CORIZQ CORDER DOSP DOSP ID:var MENORQ GUION expresion:val END PYC
       {:Util.Instruction.tablaVariables.put(var.toString(), val.toString()); :}
     | ARR DOSP DOUBLEVAR DOSP DOSP IDARR:var MENORQ GUION CORIZQ listaValores:val CORDER END PYC
-      {:Util.Instruction.tablaVariables.put(var.toString(), (LinkedList<Double>)  val); Util.Instruction.mostrarTablaVariables();:}
+      {:Util.Instruction.tablaVariables.put(var.toString(), (LinkedList<Double>)  val);:}
     | ARR DOSP DOUBLEVAR DOSP DOSP IDARR:var MENORQ GUION  expresion:val END PYC
-      {:Util.Instruction.tablaVariables.put(var.toString(), (LinkedList<Double>)  val); Util.Instruction.mostrarTablaVariables();:}
+      {:Util.Instruction.tablaVariables.put(var.toString(), (LinkedList<Double>)  val);:}
     | ARR DOSP CHARVAR CORIZQ CORDER DOSP DOSP IDARR:var MENORQ GUION CORIZQ listaValores:val CORDER END PYC
-      {:Util.Instruction.tablaVariables.put(var.toString(), (LinkedList<String>) val); Util.Instruction.mostrarTablaVariables(); :}
+      {:Util.Instruction.tablaVariables.put(var.toString(), (LinkedList<String>) val);:}
     | ARR DOSP CHARVAR CORIZQ CORDER DOSP DOSP IDARR:var MENORQ GUION  expresion:val  END PYC
-      {:Util.Instruction.tablaVariables.put(var.toString(), (LinkedList<String>) val); Util.Instruction.mostrarTablaVariables(); :}
+      {:Util.Instruction.tablaVariables.put(var.toString(), (LinkedList<String>) val);:}
     | VAR DOSP DOUBLEVAR DOSP DOSP ID:var MENORQ GUION operaciones:val END PYC
-      {:Util.Instruction.tablaVariables.put(var.toString(), val.toString() ); Util.Instruction.mostrarTablaVariables(); :}
+      {:Util.Instruction.tablaVariables.put(var.toString(), val.toString() );:}
     | VAR DOSP DOUBLEVAR DOSP DOSP ID:var MENORQ GUION funciones:val END PYC
-      {:Util.Instruction.tablaVariables.put(var.toString(), val.toString() ); Util.Instruction.mostrarTablaVariables(); :}
+      {:Util.Instruction.tablaVariables.put(var.toString(), val.toString() );:}
 ;
 
 

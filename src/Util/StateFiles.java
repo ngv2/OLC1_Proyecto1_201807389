@@ -8,10 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-/**
- *
- * @author lets
- */
 public class StateFiles {
     
     public static LinkedList<FileInput> estadoGuardado = new LinkedList<FileInput>();

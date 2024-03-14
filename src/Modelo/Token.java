@@ -2,12 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Model;
+package Modelo;
 
-/**
- *
- * @author lets
- */
 public class Token {
  
     private String token;
@@ -21,8 +17,6 @@ public class Token {
         this.fila = fila;
         this.columna = columna;
     }
-
-    // Métodos getter para acceder a los atributos
 
     public String getToken() {
         return token;

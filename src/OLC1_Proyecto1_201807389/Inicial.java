@@ -2,17 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Main;
-
-
+package OLC1_Proyecto1_201807389;
 
 import java.io.StringReader;
 
-/**
- *
- * @author Usuario
- */
-public class Ejecutador {
+public class Inicial {
     
   public  void analizadores(String ruta, String jflexFile, String cupFile){
         try {
@@ -28,7 +22,6 @@ public class Ejecutador {
         }
     }
   
-          // Realizar Analisis
     public  void analizar (String entrada){
         
          
@@ -43,7 +36,6 @@ public class Ejecutador {
             
             
             System.out.println("Error fatal en compilación de entrada.");
-            // Imprimir tokens en consola
              
             System.out.println(e.getMessage());
         } 

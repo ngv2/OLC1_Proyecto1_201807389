@@ -4,17 +4,13 @@
  */
 package Tokens;
 
-/**
- *
- * @author lets
- */
-public class ErrToken {
+public class TokenError {
     
     private String lexema;
     private int fila;
     private int columna;
 
-    public ErrToken(String lexema, int fila, int columna) {
+    public TokenError(String lexema, int fila, int columna) {
         this.lexema = lexema;
         this.fila = fila;
         this.columna = columna;
